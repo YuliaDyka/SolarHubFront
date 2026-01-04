@@ -1,38 +1,31 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router'
-import { AuthAPI } from '@/api/auth.api'
+import { AuthAPI } from '@/features/auth/api'
+import { Button } from '@/components/ui/Button'
 
-export default function Register() {
+export default function Login() {
   const navigate = useNavigate()
   const [params] = useSearchParams()
 
-  const [username, setUsername] = useState('fucking user')
   const [email, setEmail] = useState('user@example.com')
   const [password, setPassword] = useState('StrongPass123')
-  const [confirmPassword, setConfirmPassword] = useState('StrongPass123')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-
-    if (password !== confirmPassword) {
-      setError("Passwords didn't match")
-      return
-    }
-
     setError(null)
     setLoading(true)
 
-    AuthAPI.register(email, username, password)
+    AuthAPI.login(email, password)
       .then(() => {
         const redirect = params.get('redirect') || '/'
 
         navigate(redirect, { replace: true })
       })
       .catch((err) => {
-        if (err.status === 409) {
-          setError('Email is already used')
+        if (err.status === 401) {
+          setError('Invalid credentionals')
         } else {
           setError('Something went wrong')
         }
@@ -61,19 +54,7 @@ export default function Register() {
               onChange={(e) => setEmail(e.target.value)}
               className="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm
                          focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              placeholder="Email..."
-            />
-          </div>
-
-          <div>
-            <input
-              type="text"
-              required
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              className="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm
-                         focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              placeholder="Username..."
+              placeholder="email..."
             />
           </div>
 
@@ -85,38 +66,31 @@ export default function Register() {
               onChange={(e) => setPassword(e.target.value)}
               className="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm
                          focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              placeholder="Password..."
+              placeholder="password..."
             />
           </div>
 
-          <div>
-            <input
-              type="password"
-              required
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              className="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm
-                         focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              placeholder="Confirm Password..."
-            />
-          </div>
-
-          <button
+          {/* <button
             type="submit"
             disabled={loading}
-            className="w-full rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-medium text-white
+            className="w-full rounded-lg bg-emerald-600 px-4 py-2.5 text-sm font-medium text-white
                        hover:bg-blue-700 transition disabled:opacity-60 disabled:cursor-not-allowed"
           >
-            {loading ? 'Реєстрація...' : 'Зареєструватися'}
-          </button>
+            {loading ? 'Вхід...' : 'Увійти'}
+          </button> */}
+          <Button className='w-full font-semibold'>
+            {loading ? 'Вхід...' : 'Увійти'}
+          </Button>
         </form>
 
-        {error && <div className="mt-4 text-sm text-red-600 text-center">{error}</div>}
+        {error && (
+          <div className="mt-4 text-sm text-red-600 text-center">{error}</div>
+        )}
 
         <div className='text-center mt-4'>
-          <Link to={`/auth/login?redirect=${params.get('redirect') || '/'}`} 
-          className='text-blue-600'>
-            Вже зареєстровані
+          <Link to={`/auth/register?redirect=${params.get('redirect') || '/'}`} 
+          className='text-emerald-600'>
+            Не зареєстровані
           </Link>
         </div>
 

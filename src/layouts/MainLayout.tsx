@@ -5,6 +5,7 @@ import { useAuth } from '@/context/AuthContext'
 import type { User } from '@/dto/user.dto'
 import { useEffect } from 'react'
 import ScrollToTop from '@/utils/ScrollToTop'
+import SideBar from '../components/Sidebar'
 
 const MainLayout = () => {
   const loaderData = useLoaderData() as { user: User }
@@ -21,11 +22,12 @@ const MainLayout = () => {
   return (
     <div className="flex flex-col min-h-screen bg-bg-dark text-text-primary">
       <ScrollToTop />
-      {/* <Header /> */}
-      <main className="p-4 grow">
-        <Outlet />
-      </main>
-      {/* <Footer /> */}
+      <div className="flex">
+        <SideBar />
+        <main className="p-4 grow ml-64">
+          <Outlet />
+        </main>
+      </div>
     </div>
   )
 }

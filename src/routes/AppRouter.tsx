@@ -1,10 +1,12 @@
 import { lazy } from 'react'
 import { createBrowserRouter } from 'react-router'
 import { authRequireLoader, getUserLoader, redirectIfAuth } from './loaders/authLoader'
+import { ClientDetailsPage } from '@/pages/clients/ClientsDetailsPage'
 
 const Home = lazy(() => import('@/pages/HomePage'))
-const LoginPage = lazy(() => import('@/pages/LoginPage'))
-const RegisterPage = lazy(() => import('@/pages/RegisterPage'))
+const LoginPage = lazy(() => import('@/pages/auth/LoginPage'))
+const RegisterPage = lazy(() => import('@/pages/auth/RegisterPage'))
+const ClientsPage = lazy(() => import('@/pages/clients/ClientsPage'))
 const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'))
 const MainLayout = lazy(() => import('@/layouts/MainLayout'))
 
@@ -15,7 +17,18 @@ export const router = createBrowserRouter([
     loader: getUserLoader,
     children: [
       { index: true, Component: Home },
-      { loader: authRequireLoader, children: [{ path: 'fuck', element: <div>FUCKING</div> }] },
+      {
+        loader: authRequireLoader,
+        children: [
+          {
+            path: 'clients',
+            children: [
+              { index: true, Component: ClientsPage },
+              { path: ':id', Component: ClientDetailsPage },
+            ],
+          },
+        ],
+      },
       { path: '*', element: <NotFoundPage /> },
     ],
   },

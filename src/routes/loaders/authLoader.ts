@@ -1,4 +1,4 @@
-import { AuthAPI } from '@/api/auth.api'
+import { AuthAPI } from '@/features/auth/api'
 import { redirect, type LoaderFunctionArgs } from 'react-router'
 
 export const authRequireLoader = async ({ request }: LoaderFunctionArgs) => {
